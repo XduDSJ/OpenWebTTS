@@ -24,15 +24,11 @@ RUN pip install --no-cache-dir -r requirements.txt
 RUN pip install https://github.com/KittenML/KittenTTS/releases/download/0.1/kittentts-0.1.0-py3-none-any.whl
 RUN pip install https://github.com/rsxdalv/chatterbox/releases/download/v0.4.4/tts_webui_chatterbox_tts-0.4.4-py3-none-any.whl
 
-# 先单独复制 package.json 以利用分层缓存，源码变动不会触发重新 npm install
-COPY package.json ./
-RUN npm install
+# 前端构建产物（static/css/style.css、static/js/*、static/icons/）已提交到仓库
+# 无需在容器内执行 npm install / npm run build，基础镜像无需 Node.js
 
 # Copy application code
 COPY . .
-
-# Build using npm
-RUN npm run build
 
 # Create directories for models and audio
 RUN mkdir -p models/coqui models/piper models/kokoro static/audio static/audio_cache

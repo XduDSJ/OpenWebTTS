@@ -28,9 +28,6 @@ dist
 # Saved users
 users/
 
-# Ignore built files
-static/css/style.css
-static/js/pdf.min.mjs
-static/js/pdf.worker.min.mjs
-static/js/marked.umd.js
-static/icons
+# 前端构建产物已提交到仓库（供 Docker 镜像直接使用，无需在容器内 npm build）
+# 如需重新构建：本地执行 `npm install && npm run build` 后提交变更
+# 注意：static/icons 仅保留 css/ 与 webfonts/，其余 svg/scss/sprites 运行时不需要
