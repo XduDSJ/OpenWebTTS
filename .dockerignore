@@ -1,0 +1,36 @@
+# 版本控制与 CI 配置
+.git
+.gitignore
+.github
+
+# 依赖与缓存目录（容器内由 npm install / pip install 重新生成）
+node_modules/
+venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# 运行时数据（不应打入镜像）
+users/
+models/
+static/audio_cache/
+
+# 文档与测试（不进运行镜像）
+docs/
+test/
+*.md
+LICENSE
+
+# 构建配置文件本身
+Dockerfile
+.dockerignore
+compose.yaml
+
+# 其他平台构建产物
+.flatpak-builder
+build-dir
+build
+dist
+*.spec
+flatpak-manifest.yml

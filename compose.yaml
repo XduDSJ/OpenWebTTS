@@ -1,5 +1,10 @@
 services:
   openwebtts:
-    build: .
+    # 默认拉取 CI 构建的镜像；如需本地构建，注释掉 image 行并启用下方 build 行
+    image: ghcr.io/xdudsj/openwebtts:latest
+    # build: .
     ports:
       - "8000:8000"
+    volumes:
+      - ./models:/app/models
+      - ./users:/app/users

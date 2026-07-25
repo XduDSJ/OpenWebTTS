@@ -10,6 +10,7 @@ RUN apt-get update && apt-get install -y \
   ffmpeg \
   pkg-config \
   espeak-ng \
+  curl \
   && rm -rf /var/lib/apt/lists/*
 
 # Set working directory
@@ -22,6 +23,10 @@ COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 RUN pip install https://github.com/KittenML/KittenTTS/releases/download/0.1/kittentts-0.1.0-py3-none-any.whl
 RUN pip install https://github.com/rsxdalv/chatterbox/releases/download/v0.4.4/tts_webui_chatterbox_tts-0.4.4-py3-none-any.whl
+
+# 先单独复制 package.json 以利用分层缓存，源码变动不会触发重新 npm install
+COPY package.json ./
+RUN npm install
 
 # Copy application code
 COPY . .
