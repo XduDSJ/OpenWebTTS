@@ -20,3 +20,9 @@
   - 同类修复：`index.js:319` `handleSidebarCollapse()` 同样漏传 `appState`（podcast 点击 + 侧栏折叠时触发）
   - 同类排查：grep 所有 UI.js 导入函数空参数调用，已清零
   - 改动：`static/js/index.js` 2 行，surgical
+- [x] i18n 回归 bug 修复：裸变量引用 + preventDefault + podcast 错误处理（详见 `docs/06-i18n回归修复-2026-07-26.md`）
+  - 修复 16 处裸变量引用（漏写 `appState.elements.`/`variables.` 前缀）
+  - 删除 document click 监听器多余的 `e.preventDefault()`（阻止文件选择器/checkbox）
+  - 修复 podcast.js 错误处理 body 二次消费 bug（`json()` 失败后 `text()` 抛 TypeError）
+  - Oracle 审查确认修复正确，无遗漏
+  - 改动：`index.js`、`UI.js`、`podcast.js`，surgical
