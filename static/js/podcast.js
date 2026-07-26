@@ -16,8 +16,16 @@ export async function generatePodcast(username, title, text, lang, engine, voice
         });
 
         if (!response.ok) {
-            const errorData = await response.json();
-            throw new Error(errorData.detail || 'Failed to generate podcast.');
+            let errorMsg = `Failed to generate podcast (HTTP ${response.status})`;
+            try {
+                const errorData = await response.json();
+                errorMsg = errorData.detail || errorMsg;
+            } catch (e) {
+                // 响应不是 JSON（可能是 HTML 错误页），记录原始内容
+                const responseText = await response.text();
+                console.error('Non-JSON error response:', responseText);
+            }
+            throw new Error(errorMsg);
         }
 
         const data = await response.json();

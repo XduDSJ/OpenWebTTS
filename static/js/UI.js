@@ -149,7 +149,7 @@ export async function updateVoices(appState) {
             apiKey = localStorage.getItem('geminiApiKey');
             if (!apiKey) {
                 showNotification(t('toast.set_gemini_key'), 'warn');
-                voiceSelect.innerHTML = '<option value="">-- API key needed --</option>';
+                appState.elements.voiceSelect.innerHTML = '<option value="">-- API key needed --</option>';
                 return;
             }
             endpoint += `&api_key=${apiKey}`;

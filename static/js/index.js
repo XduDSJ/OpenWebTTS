@@ -221,7 +221,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         const page = parseInt(appState.elements.pageNumInput.value);
         if (!isNaN(page)) {
             appState.elements.currentPageContainer.innerHTML = ''; // Clear current view.
-            if (pdfDoc) renderPage(page);
+            if (appState.variables.pdfDoc) renderPage(page);
             else renderTextPage(page);
         }
         appState.elements.pageNumInput.style.display = 'none';
@@ -315,7 +315,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
                 const playerDiv = li.querySelector(`#podcast-audio-player-${podcast.id}`);
 
-                if (sidebar.classList.contains('collapsed')) {
+                if (appState.elements.sidebar.classList.contains('collapsed')) {
                     handleSidebarCollapse(appState);
                     playerDiv.classList.add('hidden');
                 }
@@ -354,7 +354,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                     t('common.delete'),
                     async () => {
         
-                        const result = await deletePodcast(currentUser, podcast.id);
+                        const result = await deletePodcast(appState.variables.currentUser, podcast.id);
                         if (result.success) {
                             showNotification(t('toast.podcast_deleted').replace('{title}', podcast.title), 'success');
                             fetchAndRenderPodcasts(); // Re-render the list
@@ -646,7 +646,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         let highlightClass = "highlight";
 
         if (appState.variables.localPrefs.highlightColor)
-        highlightClass += ` ${localPrefs.highlightColor}`;
+        highlightClass += ` ${appState.variables.localPrefs.highlightColor}`;
 
         // Create the HTML for the highlighted chunk (with spans for each word)
         const words = chunkText.split(/(\s+)/); // Keep spaces
@@ -864,7 +864,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     appState.elements.skipHeadersCheckbox.addEventListener('change', () => {
         if (appState.variables.activeBook?.source === 'local') {
-            appState.variables.localBooks[appState.variables.activeBook.id].skipHeadersNFooters = skipHeadersCheckbox.checked;
+            appState.variables.localBooks[appState.variables.activeBook.id].skipHeadersNFooters = appState.elements.skipHeadersCheckbox.checked;
             saveLocalBooks(appState);
         } else {
             handlePrefs({ skipHeaders: appState.elements.skipHeadersCheckbox.checked })
@@ -1225,7 +1225,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             const page1Text = await renderSinglePage(num, appState.elements.pdfViewer, append);
             let page2Text = '';
 
-            if (num + 1 <= pdfDoc.numPages)
+            if (num + 1 <= appState.variables.pdfDoc.numPages)
             page2Text = await renderSinglePage(num + 1, appState.elements.pdfViewer, append);
 
             if (!skipTextExtraction) {
@@ -1430,7 +1430,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         appState.elements.bookView.classList.add('hidden');
         
         if (appState.variables.currentUser)
-        appState.elements.mainDiv.appendChild(await renderUserPdfs(currentUser));
+        appState.elements.mainDiv.appendChild(await renderUserPdfs(appState.variables.currentUser));
         else appState.elements.mainDiv.appendChild(createFilesGrid([]));
     });
 
@@ -1520,7 +1520,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                     clearInterval(interval);
                     showNotification(t('toast.ocr_completed'), 'success');
 
-                    if (bookId && currentUser) {
+                    if (bookId && appState.variables.currentUser) {
                         const newOnlineBook = await saveOcrText(bookId, data.text);
                         if (newOnlineBook) {
                             setActiveBook({ ...newOnlineBook, source: 'online' });
@@ -1677,9 +1677,9 @@ document.addEventListener('DOMContentLoaded', async () => {
                 const data = await response.json();
                 
                 // Load the full text and render the first page
-                fullBookText = data.text;
+                appState.variables.fullBookText = data.text;
                 if (appState.variables.activeBook?.source === 'local') {
-                    localBooks[appState.variables.activeBook.id].text = fullBookText;
+                    appState.variables.localBooks[appState.variables.activeBook.id].text = appState.variables.fullBookText;
                     saveLocalBooks(appState);
                 }
                 appState.variables.totalTextPages = Math.max(1, Math.ceil(appState.variables.fullBookText.length / appState.variables.charsPerPage));
@@ -1850,7 +1850,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         } },
         { name: t('player.transcribe_audio_file'), icon: 'fa-file-signature', description: t('player.transcribe_audio_file'), action: () => {
             if (appState.variables.activeBook) {
-                audioFileInput.click(); hideCommandPalette();
+                appState.elements.audioFileInput.click(); hideCommandPalette();
             } else showNotification(t('book.no_active'));
         } },
         { name: t('login.login_create'), icon: 'fa-user-plus', description: t('login.login_create'), action: () => { showLoginModal(appState); hideCommandPalette(); } },
@@ -2101,7 +2101,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             const data = await response.json();
             showNotification(data.message, 'success');
             
-            saveBookBtn.classList.remove('bg-yellow-500', 'hover:bg-yellow-600');
+            appState.elements.saveBookBtn.classList.remove('bg-yellow-500', 'hover:bg-yellow-600');
             fetchAndRenderOnlineBooks();
 
             if (!isUpdatingOnlineBook) {
@@ -2229,8 +2229,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     appState.elements.accountSwitcherMenu.addEventListener('keydown', (e) => {
         if (e.key === 'Escape') {
             e.preventDefault();
-            accountSwitcherMenu.classList.add('hidden');
-            accountSwitcherBtn.focus();
+            appState.elements.accountSwitcherMenu.classList.add('hidden');
+            appState.elements.accountSwitcherBtn.focus();
         }
     });
     
@@ -2274,7 +2274,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
                 if (appState.variables.pdfDoc) {
                     const canvas = appState.variables.currentMostVisiblePage;
-                    podcastText = await getAllPdfText(pdfDoc, { 
+                    podcastText = await getAllPdfText(appState.variables.pdfDoc, { 
                         skipHeadersNFooters: appState.elements.skipHeadersCheckbox.value,
                         canvasHeight: canvas.height 
                     });
@@ -2379,6 +2379,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // Toggle settings dropup
     appState.elements.settingsDropupToggleBtn.addEventListener('click', (e) => {
+        console.log('[诊断] 设置按钮点击触发, 菜单当前hidden=', appState.elements.settingsDropupMenu.classList.contains('hidden'));
         e.stopPropagation();
         appState.elements.settingsDropupMenu.classList.toggle('hidden');
         
@@ -2395,7 +2396,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     
     // Close dropups when clicking outside
     document.addEventListener('click', (e) => {
-        e.preventDefault();
         appState.elements.settingsDropupMenu.classList.add('hidden');
         appState.elements.notificationDropdown.classList.add('hidden');
     });
