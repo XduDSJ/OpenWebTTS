@@ -26,3 +26,7 @@
   - 修复 podcast.js 错误处理 body 二次消费 bug（`json()` 失败后 `text()` 抛 TypeError）
   - Oracle 审查确认修复正确，无遗漏
   - 改动：`index.js`、`UI.js`、`podcast.js`，surgical
+- [x] /api/piper_voices 阻塞事件循环修复（详见 `docs/07-piper-voices阻塞修复-2026-07-26.md`）
+  - 根因：async 函数中同步调用 `requests.get()` 无 timeout，Docker 网络不通时无限挂起阻塞事件循环
+  - 修复：`asyncio.to_thread` + `timeout=10`，10 秒超时快速失败
+  - 改动：`functions/routes.py`，surgical
