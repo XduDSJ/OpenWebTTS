@@ -1,3 +1,4 @@
+import { t } from './i18n.js';
 
 /**
  * Show a temporary notification toast.
@@ -78,14 +79,14 @@ export function updateCurrentUserUI(appState) {
     const userDetails = document.querySelector('#current-user + div');
     
     if (!appState.variables.currentUser) {
-        appState.elements.currentUserDisplay.textContent = 'Anonymous';
-        userDetails.textContent = 'Not signed in';
+        appState.elements.currentUserDisplay.textContent = t('account.anonymous');
+        userDetails.textContent = t('account.not_signed_in');
         appState.elements.logoutBtn.classList.add('hidden');
         return;
     }
 
     appState.elements.currentUserDisplay.textContent = appState.variables.currentUser;
-    userDetails.textContent = 'Signed in';
+    userDetails.textContent = t('account.signed_in');
     appState.elements.logoutBtn.classList.remove('hidden');
 }
 
@@ -102,7 +103,7 @@ export function updatePlayerUI(newState, appState) {
             appState.variables.isPaused = false;
             appState.elements.stopBtn.disabled = false;
             appState.elements.playbackSpeed.disabled = false;
-            appState.elements.generateBtnText.textContent = 'Listen';
+            appState.elements.generateBtnText.textContent = t('player.listen');
             appState.elements.generateBtnIcon.classList.add('fa-volume-high');
             break;
         case 'BUFFERING':
@@ -110,7 +111,7 @@ export function updatePlayerUI(newState, appState) {
             appState.variables.isPlaying = false;
             appState.variables.isPaused = false;
             appState.elements.playbackSpeed.disabled = true;
-            appState.elements.generateBtnText.textContent = 'Loading';
+            appState.elements.generateBtnText.textContent = t('common.loading');
             appState.elements.generateBtnIcon.classList.add('fa-sync-alt', 'animate-spin');
             break;
         case 'PLAYING':
@@ -118,7 +119,7 @@ export function updatePlayerUI(newState, appState) {
             appState.variables.isPlaying = true;
             appState.variables.isPaused = false;
             appState.elements.playbackSpeed.disabled = false;
-            appState.elements.generateBtnText.textContent = 'Pause';
+            appState.elements.generateBtnText.textContent = t('player.pause');
             appState.elements.generateBtnIcon.classList.add('fa-pause');
             break;
         case 'PAUSED':
@@ -126,7 +127,7 @@ export function updatePlayerUI(newState, appState) {
             appState.variables.isPlaying = false;
             appState.variables.isPaused = true;
             appState.elements.playbackSpeed.disabled = false;
-            appState.elements.generateBtnText.textContent = 'Play';
+            appState.elements.generateBtnText.textContent = t('player.play');
             appState.elements.generateBtnIcon.classList.add('fa-play');
             break;
     }
@@ -147,7 +148,7 @@ export async function updateVoices(appState) {
         if (engine === 'gemini') {
             apiKey = localStorage.getItem('geminiApiKey');
             if (!apiKey) {
-                showNotification('Please set your Gemini API Key in the Config page.', 'warn');
+                showNotification(t('toast.set_gemini_key'), 'warn');
                 voiceSelect.innerHTML = '<option value="">-- API key needed --</option>';
                 return;
             }
@@ -309,7 +310,7 @@ export function resetBookView(appState) {
     appState.elements.textDisplay.textContent = '';
     appState.elements.currentChunkTextSpan.textContent = '';
     appState.elements.currentChunk.classList.add('hidden');
-    appState.elements.bookPageTitle.textContent = 'New Book';
+    appState.elements.bookPageTitle.textContent = t('book.new_book');
     appState.elements.bookView.classList.add('hidden');
     appState.elements.textboxViewerWrapper.classList.remove('hidden');
     appState.variables.fullBookText = '';
