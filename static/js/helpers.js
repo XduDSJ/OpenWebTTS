@@ -5,6 +5,9 @@
  *
  */
 
+// i18n 国际化模块
+import { t } from './i18n.js';
+
 /**
  * Format a UNIX timecode into a humanized relative string.
  * @param {int} timestamp UNIX timecode.
@@ -557,11 +560,11 @@ export async function transcribeAudio(appState, audioBlob) {
                 appState.variables.localBooks[appState.variables.activeBook.id].text = newText;
                 saveLocalBooks(appState);
             }
-            appState.functions.showNotification(`Transcription completed! Detected language: ${data.language || 'Unknown'}`, 'success');
-        } else appState.functions.showNotification('No speech detected in the audio.', 'warning');            
+            appState.functions.showNotification(t('toast.transcription_complete_short').replace('{lang}', data.language || 'Unknown'), 'success');
+        } else appState.functions.showNotification(t('toast.no_speech_short'), 'warning');            
     } catch (error) {
         console.error('Error transcribing audio:', error);
-        appState.functions.showNotification(`Transcription failed: ${error.message}`, 'error');
+        appState.functions.showNotification(t('toast.transcription_failed_short').replace('{error}', error.message), 'error');
     } finally {
         appState.elements.recordBtn.disabled = false;
         appState.elements.recordBtn.innerHTML = '<span class="me-2">Record Audio</span><i class="fas fa-microphone"></i>';
@@ -601,7 +604,7 @@ export async function startRecording(appState) {
         
     } catch (error) {
         console.error('Error starting recording:', error);
-        appState.functions.showNotification('Failed to start recording. Please make sure you have granted microphone permissions.', 'error');
+        appState.functions.showNotification(t('toast.recording_failed'), 'error');
     }
 }
 

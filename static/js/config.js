@@ -11,10 +11,12 @@
  */
 
 import { setBodyFont, handlePrefs } from "./helpers.js";
+import { initI18n, t } from './i18n.js';
 
 const clearCacheButton = document.getElementById('clear-cache');
 
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
+    await initI18n();
     const accessibleFontCheckbox = document.getElementById('use-accessible-font-checkbox');
     const accessibleFontUICheckbox = document.getElementById('accessible-font-ui-checkbox');
     const piperVoiceSelect = document.getElementById('piper-voice');
@@ -62,7 +64,7 @@ document.addEventListener('DOMContentLoaded', () => {
     async function downloadPiperVoice() {
         const voiceKey = piperVoiceSelect.value;
         if (!voiceKey) {
-            alert('Please select a voice to download.');
+            alert(t('toast.select_voice'));
             return;
         }        
 
@@ -117,7 +119,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const voiceDownloadURL = kokoroVoiceSelect.value;
         const voiceKey = voiceDownloadURL.split('voices/')[1];
         if (!voiceDownloadURL) {
-            alert('Please select a voice to download.');
+            alert(t('toast.select_voice'));
             return;
         }        
 
