@@ -1,4 +1,5 @@
 import os
+import asyncio
 import hashlib
 import shutil
 import tempfile
@@ -300,7 +301,13 @@ async def read_config(request: Request):
 @router.get("/api/piper_voices")
 async def get_piper_voices_from_hf():
     try:
-        response = requests.get("https://huggingface.co/rhasspy/piper-voices/raw/main/voices.json")
+        # 用线程池执行同步 requests 调用，避免阻塞 FastAPI 事件循环；
+        # 加 timeout 防止容器网络不通时无限挂起导致整个应用卡死
+        response = await asyncio.to_thread(
+            requests.get,
+            "https://huggingface.co/rhasspy/piper-voices/raw/main/voices.json",
+            timeout=10,
+        )
         response.raise_for_status()
         return JSONResponse(content=response.json())
     except requests.exceptions.RequestException as e:
