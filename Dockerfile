@@ -19,7 +19,15 @@ WORKDIR /app
 # Copy requirements first for better caching
 COPY requirements.txt .
 
-# Install Python dependencies
+# 第一步：从 PyTorch 官方 CPU 索引预装 torch + torchaudio
+# 避免后续 pip 从 PyPI 拉取带 CUDA 库的版本（约 2-3GB），CPU 推理无需 CUDA
+# 预装后 pip 发现 torch 已满足版本要求会跳过，openai-whisper / coqui-tts / kokoro 共用此 torch
+RUN pip install --no-cache-dir \
+    torch \
+    torchaudio \
+    --index-url https://download.pytorch.org/whl/cpu
+
+# 第二步：安装其余 Python 依赖（torch 已满足，pip 跳过，不会重复拉 CUDA 版）
 RUN pip install --no-cache-dir -r requirements.txt
 RUN pip install https://github.com/KittenML/KittenTTS/releases/download/0.1/kittentts-0.1.0-py3-none-any.whl
 RUN pip install https://github.com/rsxdalv/chatterbox/releases/download/v0.4.4/tts_webui_chatterbox_tts-0.4.4-py3-none-any.whl
