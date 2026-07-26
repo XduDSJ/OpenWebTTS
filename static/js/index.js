@@ -1774,7 +1774,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             showNotification(t('toast.transcription_failed').replace('{error}', error.message), 'error');
         } finally {
             appState.elements.transcribeFileBtn.disabled = false;
-            appState.elements.transcribeFileBtn.innerHTML = '<span class="me-2">Transcribe File</span><i class="fas fa-file-audio"></i>';
+            appState.elements.transcribeFileBtn.innerHTML = `<span class="me-2">${t('player.transcribe_file')}</span><i class="fas fa-file-audio"></i>`;
         }
     }
 
@@ -2266,7 +2266,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
                 hideBookModal(appState);
                 appState.elements.generatePodcastBtn.disabled = true;
-                appState.elements.generatePodcastBtn.innerHTML = '<i class="animate-spin fas fa-rotate-right"></i> Generating...';
+                appState.elements.generatePodcastBtn.innerHTML = `<i class="animate-spin fas fa-rotate-right"></i> ${t('common.generating')}`;
 
                 const engine = appState.elements.engineSelect.value;
                 const voice = appState.elements.voiceSelect.value;
@@ -2297,7 +2297,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                     showNotification(t('toast.podcast_generate_failed').replace('{error}', result.error), 'error');
                 }
                 appState.elements.generatePodcastBtn.disabled = false;
-                appState.elements.generatePodcastBtn.innerHTML = '<i class="fas fa-podcast"></i><span class="ms-2">New Podcast</span>';
+                appState.elements.generatePodcastBtn.innerHTML = `<i class="fas fa-podcast"></i><span class="ms-2">${t('podcast.new')}</span>`;
             },
             { showInput: true, inputValue: appState.variables.activeBook ? appState.variables.activeBook.title : '' },
             appState

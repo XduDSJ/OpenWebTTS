@@ -83,6 +83,7 @@
     "common.stop": "停止",
     "common.upload": "上传",
     "common.loading": "加载中...",
+    "common.generating": "生成中...",
     "common.esc": "ESC",
     "common.enter": "ENTER",
     "common.delete_podcast": "删除播客",
@@ -90,6 +91,7 @@
     "common.retry_podcast": "重试播客",
 
     "podcast.generate": "生成播客",
+    "podcast.new": "新建播客",
 
     "aria.list_saved_books": "已保存书籍列表",
     "aria.list_podcasts": "播客列表",

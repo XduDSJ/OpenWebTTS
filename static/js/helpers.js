@@ -567,7 +567,7 @@ export async function transcribeAudio(appState, audioBlob) {
         appState.functions.showNotification(t('toast.transcription_failed_short').replace('{error}', error.message), 'error');
     } finally {
         appState.elements.recordBtn.disabled = false;
-        appState.elements.recordBtn.innerHTML = '<span class="me-2">Record Audio</span><i class="fas fa-microphone"></i>';
+        appState.elements.recordBtn.innerHTML = `<span class="me-2">${t('player.record_audio')}</span><i class="fas fa-microphone"></i>`;
     }
 }
 

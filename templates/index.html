@@ -9,7 +9,6 @@
     <link rel="icon" type="image/png" href="/static/favicon.png">
     <script type="module" src="/static/js/pdf.min.mjs"></script>
     <script type="module" src="/static/js/marked.umd.js"></script>
-    <script type="module" src="/static/js/i18n.js"></script>
 </head>
 <body class="bg-gray-50 dark:bg-gray-900">
 
@@ -119,7 +118,7 @@
                                 <hr class="my-2 w-[50%] mx-auto border-indigo-200 dark:border-gray-700" />
                                 <div class="flex items-center justify-between w-full p-3 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors text-left">
                                     <span class="text-sm font-medium dark:text-gray-200" data-i18n="lang.switch">Language</span>
-                                    <select id="langSelect" data-i18n-aria-label="lang.switch" class="text-sm bg-gray-100 dark:bg-gray-700 dark:text-gray-200 rounded-lg border border-gray-200 dark:border-gray-600 px-2 py-1">
+                                    <select id="lang-select" data-i18n-aria-label="lang.switch" class="text-sm bg-gray-100 dark:bg-gray-700 dark:text-gray-200 rounded-lg border border-gray-200 dark:border-gray-600 px-2 py-1">
                                         <option value="en">English</option>
                                         <option value="zh">中文</option>
                                     </select>
@@ -406,14 +405,5 @@
     </div>
 
     <script type="module" src="/static/js/index.js"></script>
-    <script type="module">
-        import { initI18n, setLang, getCurrentLang } from '/static/js/i18n.js';
-        await initI18n();
-        const langSelect = document.getElementById('langSelect');
-        if (langSelect) {
-            langSelect.value = getCurrentLang();
-            langSelect.addEventListener('change', (e) => setLang(e.target.value));
-        }
-    </script>
 </body>
 </html>

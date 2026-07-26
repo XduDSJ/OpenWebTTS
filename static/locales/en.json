@@ -83,6 +83,7 @@
     "common.stop": "Stop",
     "common.upload": "Upload",
     "common.loading": "Loading...",
+    "common.generating": "Generating...",
     "common.esc": "ESC",
     "common.enter": "ENTER",
     "common.delete_podcast": "Delete Podcast",
@@ -90,6 +91,7 @@
     "common.retry_podcast": "Retry Podcast",
 
     "podcast.generate": "Generate Podcast",
+    "podcast.new": "New Podcast",
 
     "aria.list_saved_books": "List of saved books",
     "aria.list_podcasts": "List of podcasts",
