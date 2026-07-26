@@ -90,20 +90,31 @@ t('toast.podcast_deleted').replace('{title}', podcast.title)
 | 验证项 | 结果 |
 |--------|------|
 | `node --check` 语法检查（5 个 JS 文件） | 全部通过 |
-| EN/ZH 翻译表 key 一致性 | 179 key 完全一致，无缺失 |
-| JS `t()` 调用 key 完整性（98 处） | 全部命中翻译表 |
+| EN/ZH 翻译表 key 一致性 | 181 key 完全一致，无缺失 |
+| JS `t()` 调用 key 完整性（102 处） | 全部命中翻译表 |
 | HTML `data-i18n` 属性 key 完整性（109 处） | 全部命中翻译表 |
 
-## 6. 已知限制
+## 6. 最终审查与修复
+
+最终全分支审查（oracle）发现 3 个 Important 集成问题，已在 commit `6b15210` 中修复：
+
+1. **语言切换器 ID 不匹配**：`index.html` 用 `id="langSelect"`，`index.js` 查找 `'lang-select'`，导致 index.js 切换器绑定为死代码。修复：统一为 `lang-select`。
+2. **双重 initI18n() 调用**：两个 HTML 文件底部内联脚本重复调用 initI18n，导致双倍 JSON fetch。修复：删除内联脚本，由 JS 文件 DOMContentLoaded 统一管理。
+3. **JS innerHTML 覆盖破坏翻译**：4 处 JS 动态设置 innerHTML 用硬编码英文，覆盖了 data-i18n span。修复：改用 `t()` 调用，新增 `common.generating`、`podcast.new` 两个 key。
+
+## 7. 已知限制
 
 1. **confirm() 对话框格式**（Task 6 Minor）：`index.js` L353/590/2123 处 ` ?` 问号前有多余空格（源自 brief 示例模式），`': '` 半角冒号在中文下应为全角 `：`。因 brief 禁止新增翻译 key，此局限在设计层面接受。
 2. **浏览器手动验证未执行**：Task 9 Step 1-7 的端到端浏览器验证（语言检测、切换、持久化、回退）需在浏览器环境中手动执行，本次仅完成静态验证。
 3. **后端 i18n 不在范围**：API 错误消息、日志等保持英文（YAGNI）。
-4. **部分硬编码英文未覆盖**：`helpers.js` L567 recordBtn innerHTML、`config.js` 中的 `'Downloading...'` 等非 brief 范围内的字符串保持原样，可在后续迭代中补充。
+4. **部分硬编码英文未覆盖**：`config.js` 中的 `'Downloading...'`、`'-- Error loading voices --'`、`UI.js` 中的 `'-- API key needed --'`、`config.html` 中的帮助文本（Kokoro 下载说明、Google Cloud 设置步骤、模型描述正文）等非 brief 范围内的字符串保持原样，可在后续迭代中补充。
+5. **i18n.js 中 `loadPromise` 死变量**：声明后未使用，可清理（YAGNI）。
+6. **`.replace()` 的 `$` 模式边界情况**：若 `error.message` 含 `$&` 等特殊字符可能产生异常结果，概率极低，可延后修复。
 
-## 7. 后续迭代建议
+## 8. 后续迭代建议
 
 - 修复 Task 6 Minor findings（confirm 对话框标点格式）
-- 补充 helpers.js/config.js 中剩余的硬编码英文
+- 补充 config.html 帮助文本和 config.js/UI.js 错误状态文本的翻译
+- 清理 i18n.js 中 `loadPromise` 死变量
 - 执行浏览器端到端验证（Task 9 Step 1-7）
 - 考虑将语言切换器从 `<select>` 升级为下拉菜单（设计文档第 7 节原设计）
