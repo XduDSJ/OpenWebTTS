@@ -316,7 +316,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 const playerDiv = li.querySelector(`#podcast-audio-player-${podcast.id}`);
 
                 if (sidebar.classList.contains('collapsed')) {
-                    handleSidebarCollapse();
+                    handleSidebarCollapse(appState);
                     playerDiv.classList.add('hidden');
                 }
 
@@ -2006,7 +2006,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             appState.variables.currentUser = data.username;
             sessionStorage.setItem('currentUser', appState.variables.currentUser);
             updateCurrentUserUI(appState);
-            hideLoginModal();
+            hideLoginModal(appState);
             showNotification(t('toast.login_success'), 'success');
             fetchAndRenderOnlineBooks();
             fetchAndRenderPodcasts();
