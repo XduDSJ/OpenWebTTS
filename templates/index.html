@@ -9,6 +9,7 @@
     <link rel="icon" type="image/png" href="/static/favicon.png">
     <script type="module" src="/static/js/pdf.min.mjs"></script>
     <script type="module" src="/static/js/marked.umd.js"></script>
+    <script type="module" src="/static/js/i18n.js"></script>
 </head>
 <body class="bg-gray-50 dark:bg-gray-900">
 
@@ -29,7 +30,7 @@
                             <span class="font-bold text-lg dark:text-gray-200">OpenWebTTS</span>
                         </div>
                     </div>
-                    <button aria-label="Collapse Sidebar" id="collapse-sidebar-btn" class="cursor-[w-resize] rotate-180 hover:bg-gray-200 dark:hover:bg-gray-700 dark:text-gray-200 text-left rounded-lg px-2 py-1">
+                    <button data-i18n-aria-label="nav.collapse_sidebar" aria-label="Collapse Sidebar" id="collapse-sidebar-btn" class="cursor-[w-resize] rotate-180 hover:bg-gray-200 dark:hover:bg-gray-700 dark:text-gray-200 text-left rounded-lg px-2 py-1">
                         <i class="fas fa-sign-in-alt"></i>
                     </button>
                 </div>
@@ -39,36 +40,36 @@
                     <div class="grid grid-cols-1 gap-2">
                         <button id="new-book-btn" class="flex items-center cursor-pointer p-2 rounded-lg dark:hover:bg-gray-700 dark:text-gray-200  hover:bg-gray-200">
                             <i class="fas fa-file-circle-plus text-indigo-300"></i>
-                            <span class="ms-2 hide-on-collapse">New Book</span>
+                            <span class="ms-2 hide-on-collapse" data-i18n="nav.new_book">New Book</span>
                         </button>
                         <button id="library-btn" class="flex items-center cursor-pointer p-2 rounded-lg dark:hover:bg-gray-700 dark:text-gray-200  hover:bg-gray-200">
                             <i class="fas fa-folder-open"></i>
-                            <span class="ms-2 hide-on-collapse">Library</span>
+                            <span class="ms-2 hide-on-collapse" data-i18n="nav.library">Library</span>
                         </button>
                         <a href="/config" class="flex items-center cursor-pointer p-2 rounded-lg dark:hover:bg-gray-700 dark:text-gray-200  hover:bg-gray-200">
                             <i class="fas fa-cog"></i>
-                            <span class="ms-2 hide-on-collapse">Config</span>
+                            <span class="ms-2 hide-on-collapse" data-i18n="nav.config">Config</span>
                         </a>
                         <button id="commands-btn" class="flex items-center cursor-pointer p-2 rounded-lg dark:hover:bg-gray-700 dark:text-gray-200  hover:bg-gray-200">
                             <i class="fas fa-terminal"></i>
-                            <span class="ms-2 hide-on-collapse">Commands</span>
+                            <span class="ms-2 hide-on-collapse" data-i18n="nav.commands">Commands</span>
                         </button>
                     </div>
                 </div>
 
-                <div class="m-2 text-gray-400 dark:text-gray-700 hide-on-collapse text-xs">My Books</div>
-                <ul aria-label="List of saved books" id="online-book-list" class="space-y-1">
+                <div class="m-2 text-gray-400 dark:text-gray-700 hide-on-collapse text-xs" data-i18n="nav.my_books">My Books</div>
+                <ul data-i18n-aria-label="aria.list_saved_books" aria-label="List of saved books" id="online-book-list" class="space-y-1">
                     <hr class="my-2 w-[50%] mx-auto border-indigo-200 dark:border-gray-700" />
                     <!-- Populated for logged-in users -->
                 </ul>
-                <div class="m-2 text-gray-400 dark:text-gray-700 hide-on-collapse text-xs">My Podcasts</div>
-                <ul aria-label="List of podcasts" id="podcast-list" class="space-y-1">
+                <div class="m-2 text-gray-400 dark:text-gray-700 hide-on-collapse text-xs" data-i18n="nav.my_podcasts">My Podcasts</div>
+                <ul data-i18n-aria-label="aria.list_podcasts" aria-label="List of podcasts" id="podcast-list" class="space-y-1">
                     <hr class="my-2 w-[50%] mx-auto border-indigo-200 dark:border-gray-700" />
                     <!-- Populated for logged-in users -->
                 </ul>
 
-                <div class="m-2 text-gray-400 dark:text-gray-700 hide-on-collapse text-xs">Temporary Books</div>
-                <ul aria-label="List of unsaved books" id="local-book-list" class="space-y-1">
+                <div class="m-2 text-gray-400 dark:text-gray-700 hide-on-collapse text-xs" data-i18n="nav.temp_books">Temporary Books</div>
+                <ul data-i18n-aria-label="aria.list_unsaved_books" aria-label="List of unsaved books" id="local-book-list" class="space-y-1">
                     <hr class="my-2 w-[50%] mx-auto border-indigo-200 dark:border-gray-700" />
                     <!-- Book items will be added here dynamically -->
                 </ul>
@@ -80,41 +81,49 @@
                     <button id="account-switcher-btn" class="w-full justify-between flex items-center p-2 bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 rounded-lg border border-gray-200 dark:border-gray-600 text-gray-700 dark:text-gray-200 transition-colors focus:outline-none">
                         <div class="flex flex-row items-center justify-start">
                             <i class="fas fa-user-circle me-2 text-lg"></i>
-                            <span class="text-sm font-bold">Account</span>
+                            <span class="text-sm font-bold" data-i18n="account.title">Account</span>
                         </div>
                         <i class="fas fa-chevron-up ms-2 text-xs"></i>
                     </button>
                     
                     <div id="account-switcher-menu" class="absolute bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 bottom-full mb-2 rounded-lg shadow-lg w-56 z-10 hidden">
                         <div id="current-user-button" class="p-3 border-b border-gray-200 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer">
-                            <div class="text-sm font-medium dark:text-gray-200" id="current-user">Anonymous</div>
-                            <div class="text-xs text-gray-500 dark:text-gray-400">Not signed in</div>
+                            <div class="text-sm font-medium dark:text-gray-200" id="current-user" data-i18n="account.anonymous">Anonymous</div>
+                            <div class="text-xs text-gray-500 dark:text-gray-400" data-i18n="account.not_signed_in">Not signed in</div>
                         </div>
                         <div class="p-2">
                             <a href="#" id="add-account-btn" class="flex items-center w-full p-3 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors text-left">
                                 <i class="fas fa-user-plus me-3 text-lg"></i>
                                 <div>
-                                    <div class="font-medium dark:text-gray-200">Sign in</div>
+                                    <div class="font-medium dark:text-gray-200" data-i18n="account.sign_in">Sign in</div>
                                 </div>
                             </a>
                             <a href="#" id="logout-btn" class="hidden flex items-center w-full p-3 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors text-left">
                                 <i class="fas fa-sign-out-alt me-3 text-lg"></i>
                                 <div>
-                                    <div class="font-medium dark:text-gray-200">Logout</div>
+                                    <div class="font-medium dark:text-gray-200" data-i18n="account.logout">Logout</div>
                                 </div>
                             </a>
                             <hr class="my-2 w-[50%] mx-auto border-indigo-200 dark:border-gray-700" />
                             <div>
                                 <div class="flex items-center justify-between w-full p-3 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors text-left">
-                                    <span class="text-sm font-medium dark:text-gray-200">Dark Mode</span>
+                                    <span class="text-sm font-medium dark:text-gray-200" data-i18n="account.dark_mode">Dark Mode</span>
                                     <label class="relative inline-flex items-center cursor-pointer">
                                         <input type="checkbox" id="dropdown-theme-toggle" class="sr-only peer">
                                         <div class="w-10 h-5 bg-gray-400 peer-checked:bg-indigo-600 rounded-full transition-colors"></div>
                                         <div class="absolute left-1 top-1 w-3 h-3 bg-white rounded-full peer-checked:translate-x-5 transition-transform"></div>
                                     </label>
                                 </div>
-                                <a href="/terms" class="flex items-center w-full p-3 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors text-sm text-left dark:text-gray-200">Terms of Service</a>
-                                <a href="/privacy" class="flex items-center w-full p-3 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors text-sm text-left dark:text-gray-200">Privacy Policy</a>
+                                <a href="/terms" class="flex items-center w-full p-3 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors text-sm text-left dark:text-gray-200" data-i18n="account.terms">Terms of Service</a>
+                                <a href="/privacy" class="flex items-center w-full p-3 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors text-sm text-left dark:text-gray-200" data-i18n="account.privacy">Privacy Policy</a>
+                                <hr class="my-2 w-[50%] mx-auto border-indigo-200 dark:border-gray-700" />
+                                <div class="flex items-center justify-between w-full p-3 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors text-left">
+                                    <span class="text-sm font-medium dark:text-gray-200" data-i18n="lang.switch">Language</span>
+                                    <select id="langSelect" data-i18n-aria-label="lang.switch" class="text-sm bg-gray-100 dark:bg-gray-700 dark:text-gray-200 rounded-lg border border-gray-200 dark:border-gray-600 px-2 py-1">
+                                        <option value="en">English</option>
+                                        <option value="zh">中文</option>
+                                    </select>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -126,10 +135,10 @@
     <!-- Dropdown container -->
     <div id="notification-dropdown" class="absolute left-0 bottom-2 md:ml-[260px] mb-2 p-6 bg-white shadow-lg rounded-md z-50 hidden">
         <div class="p-4 border-b border-gray-200">
-            <h3 class="text-sm font-semibold text-gray-700">Notifications</h3>
+            <h3 class="text-sm font-semibold text-gray-700" data-i18n="notification.title">Notifications</h3>
         </div>
         <ul id="notification-list" class="max-h-60 overflow-y-auto divide-y divide-gray-100">
-            <li>No new notifications</li>
+            <li data-i18n="notification.empty">No new notifications</li>
         </ul>
     </div>
 
@@ -142,11 +151,11 @@
                     <div class="flex flex-row">
                         <button id="open-file-picker-modal" class="px-4 py-2 bg-gray-100 dark:bg-gray-900 dark:text-gray-300 rounded-xl hover:bg-indigo-200 dark:hover:bg-indigo-900 transition-colors duration-200 flex items-center justify-center sm:justify-start">
                             <i class="fas fa-file-import"></i>
-                            <span class="hidden xl:inline ms-2">Import</span>
+                            <span class="hidden xl:inline ms-2" data-i18n="book.import">Import</span>
                         </button>
                         <button id="paste-clipboard-overlay-btn" class="px-4 py-2 bg-gray-100 dark:bg-gray-900 dark:text-gray-300 rounded-xl hover:bg-indigo-200 dark:hover:bg-indigo-900 transition-colors duration-200 flex items-center justify-center sm:justify-start">
                             <i class="fas fa-clipboard"></i>
-                            <span class="ms-2">Paste Clipboard</span>
+                            <span class="ms-2" data-i18n="book.paste_clipboard">Paste Clipboard</span>
                         </button>
                     </div>
                 </div>
@@ -155,15 +164,15 @@
             <div id="file-picker-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-modal hidden">
                 <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 w-full max-w-md">
                     <div class="flex justify-between items-center mb-4">
-                        <h3 class="text-m font-semibold text-gray-800 dark:text-gray-200">File Picker</h3>
-                        <button id="close-file-picker-modal" class="text-gray-400 dark:text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 focus:outline-none" title="Close">
+                        <h3 class="text-m font-semibold text-gray-800 dark:text-gray-200" data-i18n="modal.file_picker">File Picker</h3>
+                        <button id="close-file-picker-modal" class="text-gray-400 dark:text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 focus:outline-none" data-i18n="common.close" title="Close">
                             <i class="fas fa-times text-xl"></i>
                         </button>
                     </div>
                     <input type="file" id="pdf-file" name="pdf-file" accept=".pdf,.epub,.docx" class="block w-full text-sm text-gray-500 dark:text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 dark:file:bg-indigo-900 file:text-indigo-700 dark:file:text-indigo-300 hover:file:bg-indigo-100 dark:hover:file:bg-indigo-800">
                     <hr class="my-4 border-indigo-200 dark:border-gray-700">
                     <div class="flex flex-col justify-between items-start mb-4">
-                        <h3 class="text-m font-semibold text-gray-800 dark:text-gray-200">URL</h3>
+                        <h3 class="text-m font-semibold text-gray-800 dark:text-gray-200" data-i18n="modal.url">URL</h3>
                         <div class="relative w-full">
                             <input type="input" id="web-page-url" class="mt-1 block w-full pl-3 pr-10 py-2 bg-gray-100 dark:bg-gray-700 text-base border-gray-300 dark:border-gray-600 dark:text-gray-200 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-xl">
                             <div id="url-loading-indicator" class="absolute inset-y-0 right-0 pr-3 flex items-center hidden">
@@ -179,9 +188,9 @@
                     <!-- TTS Section -->
                     <div class="flex">
                         <div id="generate-section" class="flex flex-row">
-                            <button aria-label="Listen to current book" id="generate-btn" class="z-10 inline-flex flex-row shadow-xl shadow-indigo-600/50 dark:shadow-indigo-900/50 bg-indigo-600 hover:bg-indigo-700 dark:bg-indigo-700 dark:hover:bg-indigo-800 text-white font-bold py-2 px-4 rounded-lg justify-center">
+                            <button data-i18n-aria-label="aria.listen_book" aria-label="Listen to current book" id="generate-btn" class="z-10 inline-flex flex-row shadow-xl shadow-indigo-600/50 dark:shadow-indigo-900/50 bg-indigo-600 hover:bg-indigo-700 dark:bg-indigo-700 dark:hover:bg-indigo-800 text-white font-bold py-2 px-4 rounded-lg justify-center">
                                 <span class="hidden xl:inline">
-                                    <span id="generate-btn-text" class="me-2">Listen</span>
+                                    <span id="generate-btn-text" class="me-2" data-i18n="player.listen">Listen</span>
                                 </span>
                                 <i id="generate-btn-icon" class="fas fa-volume-up"></i>
                             </button>
@@ -189,7 +198,7 @@
                         <div id="audio-output" class="hidden flex">
                             <audio id="audio-player" controls class="hidden w-full"></audio>
                             <div class="flex items-center">
-                                <button aria-label="Stop audio playback" id="stop-btn" class="px-4 py-2 ps-6 -ms-4 bg-gray-100 dark:bg-gray-900 dark:text-gray-300 rounded-xl hover:bg-indigo-200 dark:hover:bg-indigo-900 transition-colors" disabled><i class="fas fa-stop"></i></button>
+                                <button data-i18n-aria-label="aria.stop_playback" aria-label="Stop audio playback" id="stop-btn" class="px-4 py-2 ps-6 -ms-4 bg-gray-100 dark:bg-gray-900 dark:text-gray-300 rounded-xl hover:bg-indigo-200 dark:hover:bg-indigo-900 transition-colors" disabled><i class="fas fa-stop"></i></button>
                             </div>
                         </div>
                     </div>
@@ -198,23 +207,23 @@
                         <!-- Speech to Text Section -->
                         <div id="speech-to-text-section" class="flex items-center mt-1 md:mt-0 md:ms-2">
                             <button id="record-btn" class="ms-2 bg-gray-100 dark:bg-gray-900 dark:text-gray-300 rounded-xl hover:bg-indigo-200 dark:hover:bg-indigo-900 transition-colors py-2 px-4">
-                                <span class="hidden xl:inline me-2">Record Audio</span>
+                                <span class="hidden xl:inline me-2" data-i18n="player.record_audio">Record Audio</span>
                                 <i class="fas fa-comment"></i>
                             </button>
                             <button id="stop-record-btn" class="hidden ml-2 bg-gray-100 dark:bg-gray-900 dark:text-gray-300 rounded-xl hover:bg-indigo-200 dark:hover:bg-indigo-900 transition-colors py-2 px-4">
-                                <span class="hidden xl:inline me-2">Stop Recording</span>
+                                <span class="hidden xl:inline me-2" data-i18n="player.stop_recording">Stop Recording</span>
                                 <i class="fas fa-stop"></i>
                             </button>
                             <div id="recording-indicator" class="hidden ml-2 flex items-center">
                                 <div class="w-3 h-3 bg-red-500 rounded-full animate-pulse"></div>
-                                <span class="ml-2 text-sm text-gray-600 dark:text-gray-400">Recording...</span>
+                                <span class="ml-2 text-sm text-gray-600 dark:text-gray-400" data-i18n="player.recording">Recording...</span>
                             </div>
                             
                             <!-- Audio File Transcription -->
                             <div class="ml-2 flex items-center">
                                 <input type="file" id="audio-file-input" accept="audio/*" class="hidden">
                                 <button id="transcribe-file-btn" class="bg-gray-100 dark:bg-gray-900 dark:text-gray-300 rounded-xl hover:bg-indigo-200 dark:hover:bg-indigo-900 transition-colors py-2 px-4">
-                                    <span class="hidden xl:inline me-2">Transcribe File</span>
+                                    <span class="hidden xl:inline me-2" data-i18n="player.transcribe_file">Transcribe File</span>
                                     <i class="fas fa-file-alt"></i>
                                 </button>
                             </div>
@@ -223,18 +232,18 @@
                         <!-- Settings Dropup -->
                         <div class="relative">
                             <!-- Settings Dropup Button -->
-                            <button aria-label="Configuration tab toggle button" id="settings-dropup-toggle-btn" class="ms-2 bg-gray-100 dark:bg-gray-900 dark:text-gray-300 rounded-xl hover:bg-indigo-200 dark:hover:bg-indigo-900 transition-colors py-2 px-4">
+                            <button data-i18n-aria-label="aria.config_toggle" aria-label="Configuration tab toggle button" id="settings-dropup-toggle-btn" class="ms-2 bg-gray-100 dark:bg-gray-900 dark:text-gray-300 rounded-xl hover:bg-indigo-200 dark:hover:bg-indigo-900 transition-colors py-2 px-4">
                                 <i class="fas fa-cog text-xl"></i>
                             </button>
                             
                             <!-- Settings Dropup Menu -->
                             <div id="settings-dropup-menu" class="absolute bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 bottom-full mb-2 right-0 rounded-lg shadow-lg w-80 max-w-sm z-50 hidden">
                                 <div class="p-4">
-                                    <div class="font-bold dark:text-gray-200 mb-3">Engine Settings</div>
+                                    <div class="font-bold dark:text-gray-200 mb-3" data-i18n="settings.engine_settings">Engine Settings</div>
                                     <!-- TTS Engine and Voice Selection -->
                                     <div class="grid grid-cols-2 gap-3 mb-4">
                                         <div>
-                                            <label for="engine" class="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">TTS Engine</label>
+                                            <label for="engine" class="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1" data-i18n="settings.tts_engine">TTS Engine</label>
                                             <select id="engine" name="engine" class="w-full pl-2 pr-8 py-2 text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 rounded-lg">
                                                 <option value="piper">Piper</option>
                                                 <option value="chatterbox">Chatterbox</option>
@@ -245,56 +254,56 @@
                                             </select>
                                         </div>
                                         <div>
-                                            <label for="voice" class="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">Voice/Speaker</label>
+                                            <label for="voice" class="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1" data-i18n="settings.voice_speaker">Voice/Speaker</label>
                                             <select id="voice" name="voice" class="w-full pl-2 pr-8 py-2 text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 rounded-lg">
-                                                <option value="">-- Select engine --</option>
+                                                <option value="" data-i18n="settings.select_engine">-- Select engine --</option>
                                             </select>
                                         </div>
                                     </div>
             
                                     <!-- Action Buttons -->
-                                    <span class="text-sm dark:text-gray-200 cursor-pointer">Download</span>
+                                    <span class="text-sm dark:text-gray-200 cursor-pointer" data-i18n="common.download">Download</span>
                                     <div class="grid grid-cols-2 gap-2 mb-4">
                                         <button id="save-book-btn" class="p-2 bg-gray-100 dark:bg-gray-700 dark:text-gray-300 rounded-lg hover:bg-indigo-200 dark:hover:bg-indigo-900 transition-colors flex items-center justify-center hidden">
                                             <i class="fas fa-save"></i>
-                                            <span class="text-sm ms-2">Save Book</span>
+                                            <span class="text-sm ms-2" data-i18n="book.save_book">Save Book</span>
                                         </button>
                                         <a id="download-link" href="#" download="speech.wav" class=" text-center hidden xl:inline button px-4 py-2 bg-gray-100 dark:bg-gray-900 dark:text-gray-300 rounded-xl hover:bg-indigo-200 dark:hover:bg-indigo-900 transition-colors">
                                             <i class="fas fa-download"></i>
-                                            <span class="text-sm ms-2">Audio</span>
+                                            <span class="text-sm ms-2" data-i18n="common.audio">Audio</span>
                                         </a>
                                         <button id="create-offline-podcast-btn" class="button px-4 py-2 bg-gray-100 dark:bg-gray-900 dark:text-gray-300 rounded-xl hover:bg-indigo-200 dark:hover:bg-indigo-900 transition-colors">
                                             <i class="fas fa-microphone"></i>
-                                            <span class="hidden md:inline text-sm ms-2">Podcast</span>
+                                            <span class="hidden md:inline text-sm ms-2" data-i18n="common.podcast">Podcast</span>
                                         </button>
                                     </div>
             
                                     <!-- Reading Settings -->
                                     <div class="border-t border-gray-200 dark:border-gray-700 pt-3">
-                                        <div class="font-bold dark:text-gray-200 mb-3">Reading Settings</div>
+                                        <div class="font-bold dark:text-gray-200 mb-3" data-i18n="settings.reading_settings">Reading Settings</div>
                                         <div class="space-y-2">
                                             <div class="ml-2">
                                                 <label for="playback-speed" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                                                    <span class="me-1 hidden md:inline">Speed:</span>
+                                                    <span class="me-1 hidden md:inline" data-i18n="settings.speed">Speed:</span>
                                                     <span id="playback-speed-display" class="mx-1 font-bold"></span>
-                                                    <span class="me-1 hidden md:inline">(0.7x - 4x)</span>
+                                                    <span class="me-1 hidden md:inline" data-i18n="settings.speed_range">(0.7x - 4x)</span>
                                                 </label>
                                                 <input type="range" id="playback-speed" min="0.7" max="4" step="0.3" value="1" class="w-full h-2 bg-gray-200 dark:bg-gray-600 rounded-lg appearance-none cursor-pointer" disabled>
                                             </div>
                                             <div class="flex items-center justify-between">
-                                                <label for="bg-noise-toggle" class="text-sm dark:text-gray-200 cursor-pointer">Enable background noise</label>
+                                                <label for="bg-noise-toggle" class="text-sm dark:text-gray-200 cursor-pointer" data-i18n="settings.bg_noise">Enable background noise</label>
                                                 <input id="bg-noise-toggle" type="checkbox" class="w-4 h-4 text-indigo-600 bg-gray-100 border-gray-300 rounded focus:ring-indigo-500 dark:focus:ring-indigo-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
                                             </div>
                                             <div class="bg-gray-100 dark:bg-gray-900 p-2 rounded-xl hidden">
-                                                <label for="bg-noise-volume" class="text-sm dark:text-gray-200 cursor-pointer">Noise Volume</label>
+                                                <label for="bg-noise-volume" class="text-sm dark:text-gray-200 cursor-pointer" data-i18n="settings.noise_volume">Noise Volume</label>
                                                 <input type="range" name="bg-noise-volume" id="bg-noise-volume" min="0" max="1" value="1" step="0.1" class="w-full h-2 bg-gray-200 dark:bg-gray-600 rounded-lg appearance-none cursor-pointer">
-                                                <label for="bg-noise" class="text-sm dark:text-gray-200 cursor-pointer">Noise</label>
+                                                <label for="bg-noise" class="text-sm dark:text-gray-200 cursor-pointer" data-i18n="settings.noise">Noise</label>
                                                 <select id="bg-noise" name="bg-noise" class="w-full pl-2 pr-8 py-2 mb-2 text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 rounded-lg">
                                                     <!-- Options will be populated -->
                                                 </select>
                                             </div>
                                             <div class="flex items-center justify-between">
-                                                <label for="skip-headers-checkbox" class="text-sm dark:text-gray-200 cursor-pointer">Skip Headers/Footers</label>
+                                                <label for="skip-headers-checkbox" class="text-sm dark:text-gray-200 cursor-pointer" data-i18n="settings.skip_headers">Skip Headers/Footers</label>
                                                 <input id="skip-headers-checkbox" type="checkbox" class="w-4 h-4 text-indigo-600 bg-gray-100 border-gray-300 rounded focus:ring-indigo-500 dark:focus:ring-indigo-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
                                             </div>
                                         </div>
@@ -307,13 +316,13 @@
 
                 <div id="current-chunk" class="hidden w-full border-t border-indigo-200 dark:border-gray-700 dark:text-gray-200 mt-2">
                     <div class="flex justify-between items-center">
-                        <button aria-label="Previous audio chunk button" id="prev-audio-btn" class="p-2 me-2 rounded-xl bg-gray-100 dark:bg-gray-900 dark:text-gray-300 hover:bg-indigo-200 dark:hover:bg-indigo-900 transition-colors duration-200">
+                        <button data-i18n-aria-label="aria.prev_chunk" aria-label="Previous audio chunk button" id="prev-audio-btn" class="p-2 me-2 rounded-xl bg-gray-100 dark:bg-gray-900 dark:text-gray-300 hover:bg-indigo-200 dark:hover:bg-indigo-900 transition-colors duration-200">
                             <i class="fas fa-step-backward text-gray-700 dark:text-gray-300"></i>
                         </button>
                         <span id="current-chunk-text-span" class="mt-2 text-xs md:text-sm">
                             <!-- The current text chunk will appear here -->
                         </span>
-                        <button aria-label="Next audio chunk button" id="next-audio-btn" class="p-2 ms-2 rounded-xl bg-gray-100 dark:bg-gray-900 dark:text-gray-300 hover:bg-indigo-200 dark:hover:bg-indigo-900 transition-colors duration-200">
+                        <button data-i18n-aria-label="aria.next_chunk" aria-label="Next audio chunk button" id="next-audio-btn" class="p-2 ms-2 rounded-xl bg-gray-100 dark:bg-gray-900 dark:text-gray-300 hover:bg-indigo-200 dark:hover:bg-indigo-900 transition-colors duration-200">
                             <i class="fas fa-step-forward text-gray-700 dark:text-gray-300"></i>
                         </button>
                     </div>
@@ -322,17 +331,17 @@
 
             <div class="xl:w-[750px] xl:mx-auto">
                 <div id="book-info" class="hidden opacity-0 transition backdrop-blur-lg w-[90dvw] md:w-[350px] z-10 border border-indigo-200 dark:border-gray-700 fixed items-center justify-between m-4 p-4 rounded-xl shadow-xl top-0 right-0">
-                    <header id="book-title" class="text-gray-800 dark:text-gray-200">New Book</header>
+                    <header id="book-title" class="text-gray-800 dark:text-gray-200" data-i18n="book.new_book_title">New Book</header>
 
                     <div id="pagination-controls" class="flex flex-row justify-between items-center">
                         <div class="flex justify-center items-center">
                             <span id="page-num" class="text-xs md:text-sm text-gray-600 dark:text-gray-400 cursor-pointer"></span>
                         </div>
                         <div class="flex justify-center items-center ms-2 md:ms-0">
-                            <button aria-label="Zoom in PDF button" id="zoom-in-btn" class="px-2 py-1 md:px-3 md:py-2 bg-gray-100 dark:bg-gray-800 dark:text-gray-300 rounded-xl hover:bg-indigo-200 dark:hover:bg-indigo-900 transition-colors">
+                            <button data-i18n-aria-label="aria.zoom_in" aria-label="Zoom in PDF button" id="zoom-in-btn" class="px-2 py-1 md:px-3 md:py-2 bg-gray-100 dark:bg-gray-800 dark:text-gray-300 rounded-xl hover:bg-indigo-200 dark:hover:bg-indigo-900 transition-colors">
                                 <i class="fas fa-magnifying-glass-plus"></i>
                             </button>
-                            <button aria-label="Zoom out PDF button" id="zoom-out-btn" class="ml-2 px-2 py-1 md:px-3 md:py-2 bg-gray-100 dark:bg-gray-800 dark:text-gray-300 rounded-xl hover:bg-indigo-200 dark:hover:bg-indigo-900 transition-colors">
+                            <button data-i18n-aria-label="aria.zoom_out" aria-label="Zoom out PDF button" id="zoom-out-btn" class="ml-2 px-2 py-1 md:px-3 md:py-2 bg-gray-100 dark:bg-gray-800 dark:text-gray-300 rounded-xl hover:bg-indigo-200 dark:hover:bg-indigo-900 transition-colors">
                                 <i class="fas fa-magnifying-glass-minus"></i>
                             </button>
                         </div>
@@ -358,13 +367,13 @@
     <!-- Login Modal -->
     <div id="login-modal" class="modal bg-modal hidden">
         <div class="modal-content bg-white dark:bg-gray-800 bg-opacity-40">
-            <h2 class="text-xl font-bold mb-4 dark:text-gray-200">Login</h2>
-            <input type="text" id="login-username-input" class="w-full p-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200 rounded-lg mb-4" placeholder="Username or Email">
-            <input type="password" id="login-password-input" class="w-full p-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200 rounded-lg mb-4" placeholder="Password">
+            <h2 class="text-xl font-bold mb-4 dark:text-gray-200" data-i18n="login.title">Login</h2>
+            <input type="text" id="login-username-input" class="w-full p-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200 rounded-lg mb-4" data-i18n-placeholder="login.placeholder_username" placeholder="Username or Email">
+            <input type="password" id="login-password-input" class="w-full p-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200 rounded-lg mb-4" data-i18n-placeholder="login.placeholder_password" placeholder="Password">
             <div class="flex justify-end space-x-2">
-                <button id="login-modal-cancel-btn" class="px-4 py-2 bg-gray-100 dark:bg-gray-900 dark:text-gray-300 rounded-xl hover:bg-indigo-200 dark:hover:bg-indigo-900 transition-colors">Cancel</button>
-                <button id="create-account-btn" class="px-4 py-2 bg-gray-200 dark:bg-gray-600 text-black dark:text-gray-300 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-500">Create Account</button>
-                <button id="login-modal-action-btn" class="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700">Login</button>
+                <button id="login-modal-cancel-btn" class="px-4 py-2 bg-gray-100 dark:bg-gray-900 dark:text-gray-300 rounded-xl hover:bg-indigo-200 dark:hover:bg-indigo-900 transition-colors" data-i18n="common.cancel">Cancel</button>
+                <button id="create-account-btn" class="px-4 py-2 bg-gray-200 dark:bg-gray-600 text-black dark:text-gray-300 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-500" data-i18n="login.create_account">Create Account</button>
+                <button id="login-modal-action-btn" class="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700" data-i18n="login.login_btn">Login</button>
             </div>
         </div>
     </div>
@@ -373,13 +382,13 @@
     <div id="book-modal" class="modal bg-modal hidden">
         <div class="modal-content bg-white dark:bg-gray-800 bg-opacity-40">
             <h2 id="modal-title" class="text-xl font-bold mb-4 dark:text-gray-200"></h2>
-            <input type="text" id="book-title-input" class="w-full p-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200 rounded-lg mb-4" placeholder="Enter book title">
+            <input type="text" id="book-title-input" class="w-full p-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200 rounded-lg mb-4" data-i18n-placeholder="book.placeholder_title" placeholder="Enter book title">
             <div class="flex justify-end space-x-2">
                 <button id="modal-cancel-btn" class="flex items-center px-4 py-2 bg-gray-100 dark:bg-gray-900 dark:text-gray-300 rounded-xl hover:bg-indigo-200 dark:hover:bg-indigo-900 transition-colors">
-                    Cancel <span class="ml-1 p-1 text-xs border rounded">ESC</span>
+                    <span data-i18n="common.cancel">Cancel</span> <span class="ml-1 p-1 text-xs border rounded" data-i18n="common.esc">ESC</span>
                 </button>
                 <button id="modal-action-btn" class="flex items-center px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700">
-                    <span class="ml-1"></span><span class="ml-1 p-1 text-xs border rounded">ENTER</span>
+                    <span class="ml-1"></span><span class="ml-1 p-1 text-xs border rounded" data-i18n="common.enter">ENTER</span>
                 </button>
             </div>
         </div>
@@ -388,8 +397,8 @@
     <!-- Command Palette Modal -->
     <div id="command-palette-modal" class="fixed inset-0 z-[100] flex items-center justify-center shadow-xl bg-modal hidden">
         <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-4 w-full max-w-lg mx-4">
-            <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-4">Command Palette</h3>
-            <input type="text" id="command-palette-input" class="w-full p-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200 rounded-lg mb-4 focus:ring-indigo-500 focus:border-indigo-500" placeholder="Type a command...">
+            <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-4" data-i18n="command.palette_title">Command Palette</h3>
+            <input type="text" id="command-palette-input" class="w-full p-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200 rounded-lg mb-4 focus:ring-indigo-500 focus:border-indigo-500" data-i18n-placeholder="command.placeholder" placeholder="Type a command...">
             <ul id="command-list" class="max-h-60 overflow-y-auto">
                 <!-- Command items will be added here dynamically -->
             </ul>
@@ -397,5 +406,14 @@
     </div>
 
     <script type="module" src="/static/js/index.js"></script>
+    <script type="module">
+        import { initI18n, setLang, getCurrentLang } from '/static/js/i18n.js';
+        await initI18n();
+        const langSelect = document.getElementById('langSelect');
+        if (langSelect) {
+            langSelect.value = getCurrentLang();
+            langSelect.addEventListener('change', (e) => setLang(e.target.value));
+        }
+    </script>
 </body>
 </html>
