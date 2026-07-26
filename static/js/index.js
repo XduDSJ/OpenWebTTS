@@ -6,6 +6,9 @@
  *
  */
 
+// i18n 国际化模块
+import { initI18n, t, setLang, getCurrentLang } from './i18n.js';
+
 // Import podcast generation
 import { getPodcasts, generatePodcast, deletePodcast } from './podcast.js';
 
@@ -53,7 +56,17 @@ import {
     updateVoices
 } from "./UI.js";
 
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
+    await initI18n();
+
+    // 语言切换器
+    const langSelect = document.getElementById('lang-select');
+    if (langSelect) {
+        langSelect.value = getCurrentLang();
+        langSelect.addEventListener('change', async (e) => {
+            await setLang(e.target.value);
+        });
+    }
 
     let appState = {
         elements: {
@@ -332,21 +345,21 @@ document.addEventListener('DOMContentLoaded', () => {
             const deleteBtn = document.createElement('button');
             deleteBtn.innerHTML = '<i class="fas fa-trash"></i>';
             deleteBtn.className = 'hover:text-gray-500';
-            deleteBtn.title = 'Delete Podcast';
+            deleteBtn.title = t('common.delete_podcast');
             deleteBtn.addEventListener('click', async (e) => {
                 e.stopPropagation();
 
                 showBookModal(
-                    `Delete Podcast: ${podcast.title}?`,
-                    'Delete',
+                    t('common.delete_podcast') + ': ' + podcast.title + ' ?',
+                    t('common.delete'),
                     async () => {
         
                         const result = await deletePodcast(currentUser, podcast.id);
                         if (result.success) {
-                            showNotification(`Podcast '${podcast.title}' deleted.`, 'success');
+                            showNotification(t('toast.podcast_deleted').replace('{title}', podcast.title), 'success');
                             fetchAndRenderPodcasts(); // Re-render the list
                         } else {
-                            showNotification(`Failed to delete podcast: ${result.error}`, 'error');
+                            showNotification(t('toast.podcast_delete_failed').replace('{error}', result.error), 'error');
                         }
 
                         hideBookModal(appState);
@@ -458,7 +471,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 const compressBtn = document.createElement('button');
                 compressBtn.innerHTML = '<i class="fas fa-compress"></i>';
                 compressBtn.className = 'hover:text-gray-500';
-                compressBtn.title = 'Compress Podcast';
+                compressBtn.title = t('common.compress_podcast');
 
                 actionsDiv.prepend(compressBtn);
 
@@ -468,7 +481,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 const retryBtn = document.createElement('button');
                 retryBtn.innerHTML = '<i class="fas fa-repeat"></i>';
                 retryBtn.className = 'hover:text-gray-500';
-                retryBtn.title = 'Retry Podcast';
+                retryBtn.title = t('common.retry_podcast');
 
                 actionsDiv.prepend(retryBtn);
                 
@@ -574,8 +587,8 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!book) return;
 
         showBookModal(
-            `Delete Book: ${book.title}?`,
-            'Delete',
+            t('book.delete_book') + ': ' + book.title + ' ?',
+            t('common.delete'),
             () => {
                 delete appState.variables.localBooks[bookId];
                 saveLocalBooks(appState);
@@ -600,8 +613,8 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!book) return;
 
         showBookModal(
-            'Rename Book',
-            'Rename',
+            t('book.rename_book'),
+            t('common.rename'),
             () => {
                 const newTitle = appState.elements.bookTitleInput.value;
                 if (newTitle?.trim() !== book.title) {
@@ -744,7 +757,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let loadBookContent = async (book) => {
 
         if (appState.variables.isPlaying) {
-            showNotification('Stop playback first!', 'warning');
+            showNotification(t('toast.stop_playback_first'), 'warning');
             return;
         }
 
@@ -965,7 +978,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 console.error(`Audio playback failed for chunk ${appState.variables.currentChunkIndex} (${currentAudio.url}) after multiple retries. Skipping chunk. Error:`, error);
                 updatePlayerUI('BUFFERING', appState)
                 appState.elements.audioPlayer.src = ''; // Clear source to prevent further attempts
-                showNotification(`Failed to play audio for chunk ${appState.variables.currentChunkIndex}. Skipping.`, 'error');
+                showNotification(t('toast.chunk_failed').replace('{index}', appState.variables.currentChunkIndex), 'error');
                 
                 // Skip to the next chunk if playback failed persistently
                 unhighlightChunk(currentAudio.text);
@@ -1169,7 +1182,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const canvas = document.createElement('canvas');
             const lastPage = appState.elements.pdfViewer.lastChild;
             canvas.classList.add('dark:invert');
-            canvas.ariaLabel = 'PDF page';
+            canvas.ariaLabel = t('aria.pdf_page');
             canvas.dataset.page = pageNumber;
 
             if (lastPage) {
@@ -1437,7 +1450,7 @@ document.addEventListener('DOMContentLoaded', () => {
         try {
             new URL(url);
         } catch (error) {
-            showNotification('Please enter a valid URL.', 'warn');
+            showNotification(t('toast.invalid_url'), 'warn');
             return;
         }
 
@@ -1463,7 +1476,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         } catch (error) {
             console.error('Error reading website:', error);
-            showNotification(`Failed to read website: ${error.message}`, 'error');
+            showNotification(t('toast.read_website_failed').replace('{error}', error.message), 'error');
         }
 
         appState.elements.filePickerModalURLLoadingIndicator.classList.toggle('hidden');
@@ -1488,7 +1501,7 @@ document.addEventListener('DOMContentLoaded', () => {
             return appState.variables.onlineBooks.find(b => b.id === bookId);
         } catch (error) {
             console.error('Error saving OCR text:', error);
-            showNotification(`Failed to save OCR text: ${error.message}`, 'error');
+            showNotification(t('toast.save_ocr_failed').replace('{error}', error.message), 'error');
             return null; // Return null on failure
         }
     }
@@ -1505,7 +1518,7 @@ document.addEventListener('DOMContentLoaded', () => {
     
                 if (data.status === 'completed') {
                     clearInterval(interval);
-                    showNotification('PDF OCR completed successfully.', 'success');
+                    showNotification(t('toast.ocr_completed'), 'success');
 
                     if (bookId && currentUser) {
                         const newOnlineBook = await saveOcrText(bookId, data.text);
@@ -1535,7 +1548,7 @@ document.addEventListener('DOMContentLoaded', () => {
             } catch (error) {
                 clearInterval(interval);
                 console.error('Error polling for OCR result:', error);
-                showNotification(`An error occurred while checking OCR status: ${error.message}`, 'error');
+                showNotification(t('toast.ocr_check_failed').replace('{error}', error.message), 'error');
             }
         }, 2000); // Poll every 2 seconds
     }
@@ -1563,7 +1576,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 appState.variables.totalTextPages = Math.max(1, Math.ceil(appState.variables.fullBookText.length / appState.variables.charsPerPage));
                 renderTextPage(1);
             } else if (data.status === 'ocr_started') {
-                showNotification('PDF contains no text. Starting background OCR...', 'info');
+                showNotification(t('toast.pdf_no_text'), 'info');
                 pollOcrResult(data.task_id, bookId);
             } else {
                 throw new Error('Received an unexpected response from the server.');
@@ -1571,7 +1584,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         } catch (error) {
             console.error('Error reading PDF:', error);
-            showNotification(`An error occurred: ${error.message}`, 'error');
+            showNotification(t('toast.error_occurred').replace('{error}', error.message), 'error');
         }
     }
 
@@ -1610,14 +1623,14 @@ document.addEventListener('DOMContentLoaded', () => {
                     hideFileModal(appState);
                     return; // Exit after server upload
                 } catch (error) {
-                    showNotification(`Error uploading PDF: ${error.message}`, 'error');
+                    showNotification(t('toast.upload_pdf_error').replace('{error}', error.message), 'error');
                     hideFileModal(appState);
                     return;
                 }
             } else {
                 // Fallback to local IndexedDB for anonymous users
                 await handlePdfUpload(file);
-                showNotification('PDF text extracted! Sign in to save PDF files.')
+                showNotification(t('toast.pdf_extracted'))
             }
         } else if (fileExtension === 'epub') {
             if (appState.variables.activeBook.source === 'local') {
@@ -1645,7 +1658,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             } catch (error) {
                 console.error('Error reading EPUB:', error);
-                showNotification(`An error occurred: ${error.message}`, error);
+                showNotification(t('toast.error_occurred').replace('{error}', error.message), error);
                 appState.elements.textDisplay.innerHTML = '';
             }
         } else if (fileExtension === 'docx') {
@@ -1674,10 +1687,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
             } catch (error) {
                 console.error('Error reading DOCX:', error);
-                showNotification(`An error occurred: ${error.message}`, 'error');
+                showNotification(t('toast.error_occurred').replace('{error}', error.message), 'error');
                 appState.elements.textDisplay.innerHTML = '';
             }
-        } showNotification('Please select a valid PDF, EPUB, or DOCX file.', 'warn');
+        } showNotification(t('toast.invalid_file'), 'warn');
         
         hideFileModal(appState);
     });
@@ -1753,12 +1766,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 checkTextContent(appState);
                 
-                showNotification(`File transcription completed! Detected language: ${data.language || 'Unknown'}`, 'success');
-            } else showNotification('No speech detected in the audio file.', 'warning');
+                showNotification(t('toast.transcription_complete').replace('{lang}', data.language || 'Unknown'), 'success');
+            } else showNotification(t('toast.no_speech'), 'warning');
             
         } catch (error) {
             console.error('Error transcribing audio file:', error);
-            showNotification(`File transcription failed: ${error.message}`, 'error');
+            showNotification(t('toast.transcription_failed').replace('{error}', error.message), 'error');
         } finally {
             appState.elements.transcribeFileBtn.disabled = false;
             appState.elements.transcribeFileBtn.innerHTML = '<span class="me-2">Transcribe File</span><i class="fas fa-file-audio"></i>';
@@ -1793,8 +1806,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const commandList = document.getElementById('command-list');
 
     const commands = [
-        { name: 'New Book', icon: 'fa-file-circle-plus', description: 'Create a new temporary book', action: () => { createNewBook(); hideCommandPalette(); } },
-        { name: 'Delete Book', icon: 'fa-trash', description: 'Delete the currently active book', action: () => { 
+        { name: t('book.new_book'), icon: 'fa-file-circle-plus', description: t('book.new_book'), action: () => { createNewBook(); hideCommandPalette(); } },
+        { name: t('book.delete_book'), icon: 'fa-trash', description: t('book.delete_book'), action: () => { 
             if (appState.variables.activeBook) {
                 if (appState.variables.activeBook.source === 'online') {
                     deleteOnlineBook(appState.variables.activeBook.id);
@@ -1802,9 +1815,9 @@ document.addEventListener('DOMContentLoaded', () => {
                     deleteLocalBook(appState.variables.activeBook.id);
                 }
                 hideCommandPalette();
-            } else showNotification('No book is currently active.');
+            } else showNotification(t('book.no_active'));
         } },
-        { name: 'Rename Book', icon: 'fa-i-cursor', description: 'Rename the currently active book', action: () => { 
+        { name: t('book.rename_book'), icon: 'fa-i-cursor', description: t('book.rename_book'), action: () => { 
             if (appState.variables.activeBook) {
                 if (appState.variables.activeBook.source === 'online') {
                     renameOnlineBook(appState.variables.activeBook);
@@ -1812,49 +1825,49 @@ document.addEventListener('DOMContentLoaded', () => {
                     renameLocalBook(appState.variables.activeBook);
                 }
                 hideCommandPalette();
-            } else showNotification('No book is currently active.');
+            } else showNotification(t('book.no_active'));
          } },
 
-        { name: 'Import File', icon: 'fa-folder-open', description: 'Import a PDF or EPUB file', action: () => {
+        { name: t('book.import_file'), icon: 'fa-folder-open', description: t('book.import_file'), action: () => {
             if (appState.variables.activeBook) {
                 showFileModal(appState); hideCommandPalette();
-            } else showNotification('No book is currently active.');
+            } else showNotification(t('book.no_active'));
         } },
-        { name: 'Generate Speech', icon: 'fa-volume-high', description: 'Generate speech for the current text', action: () => {
+        { name: t('book.generate_speech'), icon: 'fa-volume-high', description: t('book.generate_speech'), action: () => {
             if (appState.variables.activeBook) {
                 startSpeechGeneration(); hideCommandPalette();
-            } else showNotification('No book is currently active.');
+            } else showNotification(t('book.no_active'));
         } },
-        { name: 'Stop Playback', icon: 'fa-stop', description: 'Stop current audio playback', action: () => {
+        { name: t('book.stop_playback'), icon: 'fa-stop', description: t('book.stop_playback'), action: () => {
             if (appState.variables.activeBook) {
                 stopAudioQueue(); hideCommandPalette();
-            } else showNotification('No book is currently active.');
+            } else showNotification(t('book.no_active'));
         } },
-        { name: 'Record Audio', icon: 'fa-microphone-lines', description: 'Start recording audio for transcription', action: () => {
+        { name: t('player.record_audio'), icon: 'fa-microphone-lines', description: t('player.record_audio'), action: () => {
             if (appState.variables.activeBook) {
                 startRecording(appState); hideCommandPalette();
-            } else showNotification('No book is currently active.');
+            } else showNotification(t('book.no_active'));
         } },
-        { name: 'Transcribe Audio File', icon: 'fa-file-signature', description: 'Transcribe an audio file', action: () => {
+        { name: t('player.transcribe_audio_file'), icon: 'fa-file-signature', description: t('player.transcribe_audio_file'), action: () => {
             if (appState.variables.activeBook) {
                 audioFileInput.click(); hideCommandPalette();
-            } else showNotification('No book is currently active.');
+            } else showNotification(t('book.no_active'));
         } },
-        { name: 'Login/Create Account', icon: 'fa-user-plus', description: 'Login or create a new user account', action: () => { showLoginModal(appState); hideCommandPalette(); } },
-        { name: 'Save Book', icon: 'fa-floppy-disk', description: 'Save the current book to your online account', action: () => {
+        { name: t('login.login_create'), icon: 'fa-user-plus', description: t('login.login_create'), action: () => { showLoginModal(appState); hideCommandPalette(); } },
+        { name: t('book.save_book'), icon: 'fa-floppy-disk', description: t('book.save_book'), action: () => {
             if (appState.variables.activeBook) {
                 handleSaveBook(); hideCommandPalette();
-            } else showNotification('No book is currently active.');
+            } else showNotification(t('book.no_active'));
         } },
-        { name: 'Zoom In PDF', icon: 'fa-magnifying-glass-plus', description: 'Increase zoom level of PDF', action: () => {
+        { name: t('book.zoom_in_pdf'), icon: 'fa-magnifying-glass-plus', description: t('book.zoom_in_pdf'), action: () => {
             if (appState.variables.activeBook) {
                 appState.elements.zoomInBtn?.click(); hideCommandPalette();
-            } else showNotification('No book is currently active.');
+            } else showNotification(t('book.no_active'));
         } },
-        { name: 'Zoom Out PDF', icon: 'fa-magnifying-glass-minus', description: 'Decrease zoom level of PDF', action: () => {
+        { name: t('book.zoom_out_pdf'), icon: 'fa-magnifying-glass-minus', description: t('book.zoom_out_pdf'), action: () => {
             if (appState.variables.activeBook) {
                 appState.elements.zoomOutBtn?.click(); hideCommandPalette();
-            } else showNotification('No book is currently active.');
+            } else showNotification(t('book.no_active'));
         } },
     ];
 
@@ -1887,7 +1900,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (filteredCommands.length === 0) {
             const li = document.createElement('li');
             li.className = 'p-2 text-gray-500';
-            li.textContent = 'No commands found.';
+            li.textContent = t('command.no_commands');
             commandList.appendChild(li);
             return;
         }
@@ -1975,7 +1988,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const username = appState.elements.loginUsernameInput.value.trim();
         const password = appState.elements.loginPasswordInput.value.trim();
         if (!username || !password) {
-            showNotification('Username and password cannot be empty.', 'warning');
+            showNotification(t('toast.empty_credentials'), 'warning');
             return;
         }
 
@@ -1994,7 +2007,7 @@ document.addEventListener('DOMContentLoaded', () => {
             sessionStorage.setItem('currentUser', appState.variables.currentUser);
             updateCurrentUserUI(appState);
             hideLoginModal();
-            showNotification('Login successful!', 'success');
+            showNotification(t('toast.login_success'), 'success');
             fetchAndRenderOnlineBooks();
             fetchAndRenderPodcasts();
         } catch (error) {
@@ -2010,14 +2023,14 @@ document.addEventListener('DOMContentLoaded', () => {
         renderOnlineBooks();
         renderOnlinePodcasts();
         updateCurrentUserUI(appState);
-        showNotification('You have been logged out.', 'info');
+        showNotification(t('toast.logged_out'), 'info');
     }
 
     async function handleCreateAccount() {
         const username = appState.elements.loginUsernameInput.value.trim();
         const password = appState.elements.loginPasswordInput.value.trim();
         if (!username || !password) {
-            showNotification('Username and password cannot be empty.', 'warning');
+            showNotification(t('toast.empty_credentials'), 'warning');
             return;
         }
 
@@ -2041,11 +2054,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
     async function handleSaveBook() {
         if (!appState.variables.currentUser) {
-            showNotification('You must be logged in to save a book.', 'warning');
+            showNotification(t('toast.must_login_save'), 'warning');
             return;
         }
         if (!appState.variables.activeBook) {
-            showNotification('No active book to save.', 'warning');
+            showNotification(t('toast.no_active_book'), 'warning');
             return;
         }
 
@@ -2056,7 +2069,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const isPdfBook = appState.variables.activeBook.is_pdf ?? false;
 
         if (isPdfBook) {
-            showNotification('PDFs are saved immediately upon upload. No further saving action is needed.', 'info');
+            showNotification(t('toast.pdf_saved_immediately'), 'info');
             return;
         }
 
@@ -2107,8 +2120,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     async function deleteOnlineBook(bookId) {
         showBookModal(
-            `Delete Book?`,
-            'Delete',
+            t('book.delete_book') + ' ?',
+            t('common.delete'),
             async () => {
                 try {
                     const bookToDelete = appState.variables.onlineBooks.find(book => book.id === bookId);
@@ -2143,8 +2156,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function renameOnlineBook(book) {
         showBookModal(
-            'Rename Book',
-            'Rename',
+            t('book.rename_book'),
+            t('common.rename'),
             async () => {
                 const newTitle = appState.elements.bookTitleInput.value;
                 if (newTitle && newTitle.trim() !== '' && newTitle !== book.title) {
@@ -2230,24 +2243,24 @@ document.addEventListener('DOMContentLoaded', () => {
 
     appState.elements.generatePodcastBtn.addEventListener('click', () => {
         if (!appState.variables.currentUser) {
-            showNotification('You must be logged in to generate a podcast.', 'warning');
+            showNotification(t('toast.must_login_podcast'), 'warning');
             return;
         }
 
         let podcastText = appState.variables.fullBookText.trim(); // Use full text for podcast
         
         if (!podcastText) {
-            showNotification('No text found!', 'warning');
+            showNotification(t('toast.no_text'), 'warning');
             return;
         }
 
         showBookModal(
-            'Generate Podcast', 
-            'Generate', 
+            t('podcast.generate'), 
+            t('common.generate'), 
             async () => {
                 const podcastTitle = appState.elements.bookTitleInput.value.trim();
                 if (!podcastTitle) {
-                    showNotification('Podcast title cannot be empty.', 'warning');
+                    showNotification(t('toast.podcast_title_empty'), 'warning');
                     return;
                 }
 
@@ -2278,10 +2291,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 );
 
                 if (result.success) {
-                    showNotification(`Your podcast is generating and will be ready soon!`, 'success');
+                    showNotification(t('toast.podcast_generating'), 'success');
                     fetchAndRenderPodcasts();
                 } else {
-                    showNotification(`Failed to start podcast generation: ${result.error}`, 'error');
+                    showNotification(t('toast.podcast_generate_failed').replace('{error}', result.error), 'error');
                 }
                 appState.elements.generatePodcastBtn.disabled = false;
                 appState.elements.generatePodcastBtn.innerHTML = '<i class="fas fa-podcast"></i><span class="ms-2">New Podcast</span>';
@@ -2299,7 +2312,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 appState.variables.onlinePodcasts = result.podcasts || [];
                 renderOnlinePodcasts();
             } else {
-                showNotification(`Failed to fetch podcasts: ${result.error}`, 'error');
+                showNotification(t('toast.fetch_podcasts_failed').replace('{error}', result.error), 'error');
             }
         } catch (error) {
             showNotification(error.message, 'error');
